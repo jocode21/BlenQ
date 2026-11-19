@@ -20,6 +20,8 @@ data/training_metrics.json
 # Renders produced while using the app
 renders/
 *.png
+# Screenshots for the README / GitHub — keep these
+!screenshots/*.png
 
 # Test / coverage artefacts
 .pytest_cache/
