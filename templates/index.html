@@ -111,7 +111,6 @@
     <div>
       <div class="card">
         <h2>What do you want to build?</h2>
-        <p class="sub">Type free English. BlenQ only knows the 15 objects below — anything outside those will not work reliably.</p>
         <textarea id="prompt" placeholder="Describe the model you want…"></textarea>
         <button class="btn btn-primary" id="go" onclick="generate()">Generate Blender script →</button>
         <div class="status" id="status"></div>
@@ -119,10 +118,9 @@
 
       <div class="card">
         <h2>What BlenQ can build</h2>
-        <p class="sub">Tap an object to see how many pieces it has. It does not fill in a prompt for you.</p>
         <div class="objects" id="objects">
           {% for o in objects %}
-          <span class="obj" data-name="{{ o.name }}" onclick="pickObject('{{ o.name }}', {{ o.pieces }}, this)">{{ o.display }} <small>{{ o.pieces }} pieces</small></span>
+          <span class="obj" data-name="{{ o.name }}" onclick="pickObject('{{ o.name }}', {{ o.pieces }}, this)">{{ o.display }}</span>
           {% endfor %}
         </div>
         <div class="status" id="objinfo"></div>
@@ -165,12 +163,6 @@
     </div>
   </div>
 
-  <footer>
-    BlenQ is a tiny model trained from scratch — it only knows 15 fixed objects, and the models it builds are
-    simple and blocky, with no textures. Accuracy numbers on the Training numbers page are measured only after
-    full training; a smoke run is not full-training accuracy. Do not use a generated script for anything
-    outside Blender without reading it first.
-  </footer>
 </div>
 
 <script>
