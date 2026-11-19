@@ -41,8 +41,6 @@
     <tr><td>Exact match</td><td class="mono">{% if metrics and metrics.mode == "smoke" and metrics.exact_match is defined %}{{ "%.1f"|format(metrics.exact_match * 100) }}%{% else %}—{% endif %}</td><td class="mono">{% if metrics and metrics.mode == "full" and metrics.exact_match is defined %}{{ "%.1f"|format(metrics.exact_match * 100) }}%{% else %}—{% endif %}</td></tr>
     <tr><td>Runs in Blender</td><td class="mono">{% if metrics and metrics.mode == "smoke" and metrics.runnable is defined and metrics.runnable is not none %}{{ "%.1f"|format(metrics.runnable * 100) }}%{% else %}—{% endif %}</td><td class="mono">{% if metrics and metrics.mode == "full" and metrics.runnable is defined and metrics.runnable is not none %}{{ "%.1f"|format(metrics.runnable * 100) }}%{% else %}—{% endif %}</td></tr>
     <tr><td>Correct shape count</td><td class="mono">{% if metrics and metrics.mode == "smoke" and metrics.count_match is defined and metrics.count_match is not none %}{{ "%.1f"|format(metrics.count_match * 100) }}%{% else %}—{% endif %}</td><td class="mono">{% if metrics and metrics.mode == "full" and metrics.count_match is defined and metrics.count_match is not none %}{{ "%.1f"|format(metrics.count_match * 100) }}%{% else %}—{% endif %}</td></tr>
-    <tr><td>Model file</td><td colspan="2"><span class="badge">data/model.pt</span> &nbsp;created by training — never included in the zip</td></tr>
   </table>
-  <p class="sub" style="margin-top:20px;">Smoke numbers come from a few epochs on a small slice of the data. They show the pipeline works end to end; they are <span class="warn">not</span> the model's real accuracy. Real accuracy is measured only after the full 30-epoch run.</p>
 </body>
 </html>
