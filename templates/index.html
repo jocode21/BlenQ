@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BlenQ — Type English. Get Blender Python.</title>
+<style>
+  :root {
+    --bg: #12141a; --panel: #1c1f27; --panel2: #242832; --panel3: #2b303d;
+    --text: #eceef4; --muted: #9aa3b5; --faint: #6b7280;
+    --accent: #e87d0d; --accent2: #f5a623; --blue: #4da3ff;
+    --green: #3fb96a; --red: #e05252; --border: #323947; --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: radial-gradient(1200px 600px at 80% -10%, #2a2f3d 0%, var(--bg) 55%);
+    color: var(--text); font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 22px 60px; }
+  header { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .logo { width: 56px; height: 56px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent), #c25e00);
+    display: grid; place-items: center; box-shadow: 0 8px 24px rgba(232,125,13,.35); }
+  h1 { font-size: 34px; margin: 0; letter-spacing: .5px; }
+  h1 span { color: var(--accent2); }
+  .tag { color: var(--muted); margin: 2px 0 0; font-size: 15px; }
+  .top-links { margin-left: auto; display: flex; gap: 10px; }
+  .chip-link { background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    padding: 9px 14px; border-radius: 999px; font-size: 13px; }
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; margin: 22px 0; }
+  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 18px; min-width: 150px; }
+  .stat b { font-size: 22px; display: block; }
+  .stat span { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+  .grid { display: grid; grid-template-columns: 380px 1fr; gap: 18px; align-items: start; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+  .card h2 { margin: 0 0 6px; font-size: 17px; }
+  .card p.sub { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+  textarea { width: 100%; min-height: 96px; resize: vertical; background: #14161c;
+    border: 1px solid var(--border); border-radius: 12px; color: var(--text);
+    padding: 14px; font-size: 15px; font-family: inherit; }
+  textarea:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+  .btn { border: 0; cursor: pointer; border-radius: 12px; font-size: 15px; font-weight: 600;
+    padding: 12px 18px; color: #fff; }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), #c25e00); width: 100%; margin-top: 12px;
+    box-shadow: 0 6px 18px rgba(232,125,13,.35); }
+  .btn-primary:disabled { opacity: .55; cursor: wait; }
+  .btn-ghost { background: var(--panel3); color: var(--text); font-size: 13px; padding: 9px 13px; }
+  .btn-blue { background: #1d4ed8; }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .status { margin-top: 12px; font-size: 13px; min-height: 18px; }
+  .status.ok { color: var(--green); } .status.err { color: var(--red); } .status.busy { color: var(--muted); }
+  .objects { display: flex; flex-wrap: wrap; gap: 8px; }
+  .obj { background: var(--panel2); border: 1px solid var(--border); border-radius: 999px;
+    padding: 7px 12px; font-size: 13px; cursor: pointer; }
+  .obj:hover { border-color: var(--accent); }
+  .obj.sel { border-color: var(--accent); background: #3a2a16; }
+  .obj small { color: var(--muted); }
+  pre.code { background: #101218; border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px; overflow: auto; font-size: 13.5px; line-height: 1.55;
+    font-family: "Cascadia Code", Consolas, "Courier New", monospace; white-space: pre; margin: 0; }
+  .kw { color: #ff7a93; } .str { color: #a5d6a7; } .num { color: #f5a623; }
+  .fn { color: #7dd3fc; } .com { color: var(--faint); }
+  .render-box { background: #101218; border: 1px dashed var(--border); border-radius: 12px;
+    min-height: 280px; display: grid; place-items: center; overflow: hidden; }
+  .render-box img { max-width: 100%; display: block; }
+  .render-box .empty { color: var(--faint); font-size: 14px; padding: 40px; text-align: center; }
+  .meta { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 13px; margin-top: 10px; }
+  .meta b { color: var(--text); }
+  .hist { list-style: none; margin: 0; padding: 0; }
+  .hist li { padding: 10px 2px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .hist li:last-child { border-bottom: 0; }
+  .hist .q { color: var(--text); } .hist .o { color: var(--muted); }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; margin-left: 6px; }
+  .badge.ok { background: rgba(63,185,106,.18); color: var(--green); }
+  .badge.err { background: rgba(224,82,82,.18); color: var(--red); }
+  footer { color: var(--faint); font-size: 12px; margin-top: 26px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo" aria-hidden="true">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M16 3 28 9.5v13L16 29 4 22.5v-13L16 3Z" stroke="#fff" stroke-width="2" fill="rgba(255,255,255,.12)"/>
+        <path d="M16 3v13m0 0L4 9.5M16 16l12-6.5M16 16v13" stroke="#fff" stroke-width="1.6"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Blen<span>Q</span></h1>
+      <p class="tag">Type English. Get Blender Python. Build the model in Blender.</p>
+    </div>
+    <div class="top-links">
+      <a class="chip-link" href="/metrics">Training numbers</a>
+      <a class="chip-link" href="/objects">15 objects · JSON</a>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><b>15</b><span>Objects it knows</span></div>
+    <div class="stat"><b>12.2M</b><span>Model size</span></div>
+    <div class="stat"><b>{% if metrics and metrics.mode == "full" and metrics.exact_match is defined %}{{ "%.1f"|format(metrics.exact_match * 100) }}%{% else %}—{% endif %}</b><span>Exact match · full run</span></div>
+    <div class="stat"><b>{% if blender %}Blender found{% else %}Blender missing{% endif %}</b><span>Render engine</span></div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2>What do you want to build?</h2>
+        <p class="sub">Type free English. BlenQ only knows the 15 objects below — anything outside those will not work reliably.</p>
+        <textarea id="prompt" placeholder="Describe the model you want…"></textarea>
+        <button class="btn btn-primary" id="go" onclick="generate()">Generate Blender script →</button>
+        <div class="status" id="status"></div>
+      </div>
+
+      <div class="card">
+        <h2>What BlenQ can build</h2>
+        <p class="sub">Tap an object to see how many pieces it has. It does not fill in a prompt for you.</p>
+        <div class="objects" id="objects">
+          {% for o in objects %}
+          <span class="obj" data-name="{{ o.name }}" onclick="pickObject('{{ o.name }}', {{ o.pieces }}, this)">{{ o.display }} <small>{{ o.pieces }} pieces</small></span>
+          {% endfor %}
+        </div>
+        <div class="status" id="objinfo"></div>
+      </div>
+
+      <div class="card">
+        <h2>Recent</h2>
+        {% if history %}
+        <ul class="hist">
+          {% for h in history %}
+          <li><span class="q">{{ h.prompt }}</span> <span class="o">→ {{ h.object or "unknown" }}</span>{% if h.ok %}<span class="badge ok">built</span>{% else %}<span class="badge err">failed</span>{% endif %}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="sub">Nothing yet — your first build will show up here.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Blender script <span id="objlabel" style="color:var(--accent2)"></span></h2>
+        <p class="sub">Normal, readable Blender Python. Open it in Blender, or press Render in Blender below.</p>
+        <pre class="code" id="code">// Your script will appear here.</pre>
+        <div class="toolbar">
+          <button class="btn btn-ghost" onclick="copyScript()">Copy script</button>
+          <button class="btn btn-ghost" onclick="downloadScript()">Download .py</button>
+          <button class="btn btn-ghost btn-blue" id="renderBtn" onclick="renderScript()">Render in Blender</button>
+        </div>
+        <div class="status" id="scriptstatus"></div>
+      </div>
+
+      <div class="card">
+        <h2>Render</h2>
+        <p class="sub">Blender builds the model from the script above and renders a picture of it.</p>
+        <div class="render-box" id="renderbox"><div class="empty">No render yet.<br>Generate a script, then press Render in Blender.</div></div>
+        <div class="meta" id="rendermeta"></div>
+        <div class="status" id="renderstatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    BlenQ is a tiny model trained from scratch — it only knows 15 fixed objects, and the models it builds are
+    simple and blocky, with no textures. Accuracy numbers on the Training numbers page are measured only after
+    full training; a smoke run is not full-training accuracy. Do not use a generated script for anything
+    outside Blender without reading it first.
+  </footer>
+</div>
+
+<script>
+let currentScript = "";
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function highlight(code){
+  let h = esc(code);
+  h = h.replace(/(&#39;.*?&#39;|".*?")/g, '<span class="str">$1</span>');
+  h = h.replace(/\b(import|for|in|if|else)\b/g, '<span class="kw">$1</span>');
+  h = h.replace(/\b(bpy|ops|mesh|context|scene|object|location|scale|rotation|color)\b/g, '<span class="fn">$1</span>');
+  h = h.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
+  return h;
+}
+function setStatus(id, msg, cls){ const el = document.getElementById(id); el.textContent = msg; el.className = "status " + (cls || ""); }
+function pickObject(name, pieces, el){
+  document.querySelectorAll(".obj").forEach(e => e.classList.remove("sel"));
+  el.classList.add("sel");
+  document.getElementById("objinfo").textContent = name + " — " + pieces + " pieces. Type your own request above; this does not fill it in.";
+}
+async function generate(){
+  const prompt = document.getElementById("prompt").value.trim();
+  if(!prompt){ setStatus("status", "Type a request first.", "err"); return; }
+  const btn = document.getElementById("go"); btn.disabled = true;
+  setStatus("status", "BlenQ is writing the script…", "busy");
+  try {
+    const r = await fetch("/generate", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({prompt})});
+    const d = await r.json();
+    if(d.script){ currentScript = d.script; document.getElementById("code").innerHTML = highlight(d.script); }
+    if(d.ok){
+      document.getElementById("objlabel").textContent = "— " + (d.object || "");
+      setStatus("status", "Built: " + (d.object || "unknown") + " (" + (d.pieces || "?") + " pieces).", "ok");
+      setStatus("scriptstatus", "Script is ready. Copy it, download it, or render it.", "ok");
+    } else {
+      setStatus("status", d.error || "That did not work.", "err");
+    }
+  } catch(e){ setStatus("status", "Could not reach BlenQ: " + e, "err"); }
+  btn.disabled = false;
+}
+function copyScript(){
+  if(!currentScript){ setStatus("scriptstatus", "Nothing to copy yet.", "err"); return; }
+  navigator.clipboard.writeText(currentScript).then(()=> setStatus("scriptstatus", "Copied.", "ok"));
+}
+function downloadScript(){
+  if(!currentScript){ setStatus("scriptstatus", "Nothing to download yet.", "err"); return; }
+  const blob = new Blob([currentScript], {type:"text/x-python"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = "blenq_model.py"; a.click(); URL.revokeObjectURL(a.href);
+  setStatus("scriptstatus", "Downloaded blenq_model.py — open it in Blender.", "ok");
+}
+async function renderScript(){
+  if(!currentScript){ setStatus("renderstatus", "Generate a script first.", "err"); return; }
+  const btn = document.getElementById("renderBtn"); btn.disabled = true;
+  setStatus("renderstatus", "Blender is building and rendering… this can take a minute.", "busy");
+  document.getElementById("renderbox").innerHTML = '<div class="empty">Rendering…</div>';
+  try {
+    const r = await fetch("/render", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({script: currentScript})});
+    const d = await r.json();
+    if(d.ok){
+      document.getElementById("renderbox").innerHTML = '<img src="' + d.image + '" alt="Rendered model">';
+      document.getElementById("rendermeta").innerHTML = "<span>Object: <b>" + (d.object || "?") + "</b></span><span>Pieces: <b>" + (d.pieces || "?") + "</b></span><span>Render time: <b>" + d.seconds + "s</b></span>";
+      setStatus("renderstatus", "Rendered. That is the model Blender built from the script.", "ok");
+    } else {
+      setStatus("renderstatus", d.error || "Render failed.", "err");
+      document.getElementById("renderbox").innerHTML = '<div class="empty">Render failed.<br>Check the script, then try again.</div>';
+    }
+  } catch(e){ setStatus("renderstatus", "Could not reach BlenQ: " + e, "err"); }
+  btn.disabled = false;
+}
+document.getElementById("prompt").addEventListener("keydown", function(e){
+  if(e.key === "Enter" && (e.ctrlKey || e.metaKey)){ generate(); }
+});
+</script>
+</body>
+</html>

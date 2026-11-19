@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Training outputs — never ship or commit the trained weights
+data/model.pt
+data/history.json
+college.db
+# The dataset files are large (38 MB) and are rebuilt by generate_data.py
+data/*.jsonl
+# training_metrics.json in this checkout still holds the smoke-run
+# numbers (0/10) — the full-run file lives on the training machine.
+# Do not commit it as if it were the full result.
+data/training_metrics.json
+*.blend
+*.blend1
+
+# Renders produced while using the app
+renders/
+*.png
+
+# Test / coverage artefacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor
+.vscode/
+.idea/

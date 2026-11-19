@@ -1,0 +1,11 @@
+# BlenQ requirements.
+# IMPORTANT: install the CUDA build of torch, NOT the CPU-only build.
+# The CPU-only build cannot train this model in any reasonable time
+# and will silently fall back to CPU in train.py.
+# Verify after installing:
+#   python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+# It must print a +cu132 version and True, plus your GPU name.
+--extra-index-url https://download.pytorch.org/whl/cu132
+torch==2.15.0+cu132
+flask==3.1.3
+pytest==9.2.0
